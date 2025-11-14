@@ -1,9 +1,13 @@
 server:
-  port: 8080
+  port: 8486
 
+camunda:
+  client:
+    grpc-address: http://localhost:26500
+    rest-address: http://localhost:8088
 spring:
   application:
-    name: Process
+    name: process
   profiles:
     active: dev
   main:
@@ -11,12 +15,12 @@ spring:
     web-application-type: REACTIVE
   data:
     mongodb:
-      uri: mongodb://localhost:27017/Process
+      uri: mongodb://localhost:27017/${spring.application.name}
   kafka:
     bootstrap-servers: localhost:9092
     # Consumer configurations (optional)
     consumer:
-      group-id: process
+      group-id: ${spring.application.name}
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       bootstrap-servers: localhost:9092
@@ -30,7 +34,7 @@ spring:
     oauth2:
       resource-server:
         jwt:
-          issuer-uri: http://localhost:9090/realms/manak-realm
+          issuer-uri: http://localhost:8181/realms/test-realm
       client:
         provider:
           service-client:
@@ -48,3 +52,6 @@ jima:
   feature:
     database-type: sql
     database-enabled: true
+  services:
+    names:
+      storage: dms
